@@ -1,8 +1,12 @@
 <template>
     <div class="list-container">
         <h3 class="list-heading">Todo App</h3>
-        <ul class="">
-            <li class="" v-for="listItem in todoListArray" :key="listItem.id">
+        <ul class="todo-list">
+            <li class="" v-for="listItem in incompleteTasks" :key="listItem.id">
+                <ListItem v-bind:listItem="listItem" :removeTask="removeTask" />
+            </li>
+
+            <li class="" v-for="listItem in completedTasks" :key="listItem.id">
                 <ListItem v-bind:listItem="listItem" :removeTask="removeTask" />
             </li>
         </ul>
@@ -38,12 +42,12 @@ export default {
             inputValue: ""
         };
     },
+
     methods: {
         getUniqueID() {
             return "id" + Math.random().toString(16).slice(2)
         },
         showAddTaskInput() {
-            console.log("great");
             this.shouldShowAddTaskInput = true;
         },
         addTask() {
@@ -53,14 +57,21 @@ export default {
                 isCompleted: false
             });
             this.showAddTaskInput = false;
-            console.log(this.inputValue);
         },
         removeTask(id) {
             this.todoListArray = this.todoListArray.filter((val) => val.id !== id)
         }
 
     },
-    computed: {},
+    computed: {
+        completedTasks() {
+            return this.todoListArray.filter(val => val.isCompleted)
+        }
+        ,
+        incompleteTasks() {
+            return this.todoListArray.filter(val => !val.isCompleted)
+        }
+    },
     watchers: {},
 }
 </script>
@@ -77,5 +88,9 @@ export default {
 
 .list-heading {
     color: #3b3b71
+}
+
+.todo-list {
+    list-style: none;
 }
 </style>
